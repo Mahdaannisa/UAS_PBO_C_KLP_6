@@ -30,3 +30,17 @@ Sistem menyediakan **dua role utama**:
 - Mengerjakan / update status tugas (Pending → Done)  
 - Melihat Riwayat Tugas yang sudah dikerjakan  
 - Melihat informasi divisi tempat ia tergabung  
+
+Sistem juga sudah menerapkan:
+
+- ✔ *Encapsulation* (getter & setter)  
+- ✔ *Inheritance* (User → Admin & Member)  
+- ✔ *Polymorphism* (method overriding)  
+- ✔ *Abstract class / Interface*  
+- ✔ *Collection* (ArrayList)  
+- ✔ *Exception Handling*  
+- ✔ *Javadoc setiap class dan method*  
+- ✔ *Modularisasi package lengkap*  
+
+---
+
