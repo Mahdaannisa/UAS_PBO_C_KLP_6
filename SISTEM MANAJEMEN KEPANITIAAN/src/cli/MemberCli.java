@@ -151,3 +151,49 @@ public class MemberCLI {
             System.out.println("+------------+------------------------------+------------+");
         }
     }
+
+    /**
+     * Mengubah status tugas member.
+     * Tugas hanya dapat diubah bila ID sesuai dan berada di divisi member.
+     */
+    private void updateStatus() {
+        System.out.print("Masukkan ID tugas: ");
+        String tid = sc.nextLine().trim();
+
+        Anggota a = ds.findAnggotaById(member.getIdAnggota());
+        if (a == null) {
+            System.out.println(YELLOW + "(data tidak ditemukan)" + RESET);
+            return;
+        }
+
+        Divisi d = ds.findDivisiByName(a.getDivisi());
+        if (d == null) {
+            System.out.println(YELLOW + "(divisi tidak ditemukan)" + RESET);
+            return;
+        }
+
+        for (Tugas t : d.getTugasList()) {
+            if (t.getId().equals(tid)) {
+
+                System.out.println(" [1] IN_PROGRESS");
+                System.out.println(" [2] DONE");
+                System.out.print("Pilih > ");
+                String s = sc.nextLine().trim();
+
+                if ("1".equals(s)) t.setStatus(Tugas.Status.IN_PROGRESS);
+                else if ("2".equals(s)) t.setStatus(Tugas.Status.DONE);
+                else {
+                    System.out.println(YELLOW + "Pilihan tidak valid." + RESET);
+                    return;
+                }
+
+                riway.add(member.getIdAnggota(), "UPDATE_TUGAS," + tid + "," + member.getUsername());
+                ds.saveAll();
+
+                System.out.println(GREEN + "Status tugas diperbarui." + RESET);
+                return;
+            }
+        }
+
+        System.out.println(YELLOW + "Tugas tidak ditemukan." + RESET);
+    }
