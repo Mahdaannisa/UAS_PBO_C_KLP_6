@@ -79,3 +79,40 @@ public class RiwayatAdmin {
             System.out.println("(tidak ada riwayat admin)"); 
             return; 
         }
+        List<String[]> rows = new ArrayList<>();
+        int wUser=7, wEvent=4, wTime=5;
+
+        for (String l : lines) {
+            String[] p = l.split("\\|",3);
+            if (p.length<3) continue;
+            String time = p[0], user = p[1], event = p[2];
+            rows.add(new String[]{user,event,time});
+            wUser = Math.max(wUser, user.length());
+            wEvent = Math.max(wEvent, event.length());
+            wTime = Math.max(wTime, time.length());
+        }
+
+        String sep = "+" + repeat('-', wUser+2) + "+" + repeat('-', wEvent+2) + "+" + repeat('-', wTime+2) + "+";
+        System.out.println(sep);
+        System.out.printf("| %-"+wUser+"s | %-"+wEvent+"s | %-"+wTime+"s |%n","ID User","Aksi","Waktu");
+        System.out.println(sep);
+
+        for (String[] r : rows) 
+            System.out.printf("| %-"+wUser+"s | %-"+wEvent+"s | %-"+wTime+"s |%n", r[0], r[1], r[2]);
+
+        System.out.println(sep);
+    }
+
+    /**
+     * Membuat string berisi karakter berulang sebanyak n kali.
+     * Digunakan untuk membangun garis pada tampilan tabel.
+     *
+     * @param c karakter yang diulang
+     * @param n jumlah pengulangan
+     * @return string hasil pengulangan
+     */
+    private String repeat(char c, int n) { 
+        return new String(new char[n]).replace('\0', c); 
+    }
+}
+
