@@ -48,3 +48,16 @@ public class Tugas {
     /** @return Status pengerjaan tugas. */
     public Status getStatus() { return status; }
     
+    /**
+     * Mengatur deadline tugas.
+     *
+     * @param d Tanggal deadline.
+     */
+    public void setDeadline(LocalDate d) { this.deadline = d; }
+
+    /**
+     * Mengatur status pengerjaan tugas.
+     *
+     * @param s Status baru.
+     */
+    public void setStatus(Status s) { this.status = s; }
