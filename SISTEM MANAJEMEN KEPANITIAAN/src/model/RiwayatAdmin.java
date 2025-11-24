@@ -33,3 +33,35 @@ public class RiwayatAdmin {
             System.err.println("init riwayat admin: " + e.getMessage()); 
         }
     }
+
+     /**
+     * Menambahkan entri baru ke dalam riwayat admin.
+     * Entri dicatat dengan timestamp saat ini, username admin, dan deskripsi event.
+     *
+     * @param adminUsername username admin yang melakukan aksi
+     * @param event deskripsi aksi atau aktivitas
+     */
+    public synchronized void add(String adminUsername, String event) {
+        String line = LocalDateTime.now().format(fmt) + "|" + adminUsername + "|" + event;
+        try (BufferedWriter bw = Files.newBufferedWriter(file, StandardOpenOption.APPEND)) {
+            bw.write(line); 
+            bw.newLine();
+        } catch (IOException e) { 
+            System.err.println("write riwayat admin: " + e.getMessage()); 
+        }
+    }
+
+    /**
+     * Mengambil seluruh baris riwayat admin dari file.
+     *
+     * @return list string berisi baris riwayat; kosong jika file tidak ada atau gagal dibaca
+     */
+    public List<String> getAll() {
+        try { 
+            if (!Files.exists(file)) return Collections.emptyList();
+            return Files.readAllLines(file); 
+        } catch (IOException e) { 
+            System.err.println("read riwayat admin: " + e.getMessage()); 
+            return Collections.emptyList(); 
+        }
+    }
