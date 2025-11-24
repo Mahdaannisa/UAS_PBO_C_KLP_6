@@ -78,5 +78,10 @@ java App
 ---
 
 ## 3️⃣ Pembagian Tugas Kelompok 6
-
+1. MAHDA ANNISA (2408107010036) : Membuat Folder, LoginCli.java, MemberCli.java, Main.java, dan Account.java
+2. SILVIA PUTRI (2408107010086) : Membuat Admin.java, AdminCli.java, dan PPT
+3. SAYED ZAKI AQRAM (2408107010087) : Membuat Tugas.java, Member.java, dan readme
+4. ZANNA ZIKRAANA (2408107010094) : Membuat Admin.java, Anggota.java, DataStorage.java, Diagram Class, PPT
+5. ARSHA ALIFA MAHMUD (2408107010095) :Membuat Divisi.java, RiwayatAdmin.java, RiwayatMember.java, dan PPT
+6. MIRDHA AULIA ZAHRA (2408107010115) :-
 
