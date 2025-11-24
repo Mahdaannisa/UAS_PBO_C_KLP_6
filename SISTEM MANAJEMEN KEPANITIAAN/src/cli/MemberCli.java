@@ -291,3 +291,137 @@ public class MemberCLI {
         else tugasMatches.forEach(s -> System.out.println("- " + s));
         System.out.println("=====================================================");
     }
+
+    /**
+     * Menu filter tugas (default filters: status / divisi).
+     *
+     * Menyajikan submenu untuk memilih jenis filter.
+     */
+    private void filterTugas() {
+        System.out.println();
+        System.out.println("------------------------------------------------------------");
+        System.out.println(TITLE + "                       FILTER TUGAS                        " + RESET);
+        System.out.println("------------------------------------------------------------");
+        System.out.println(" [1] Filter by Status (TODO/IN_PROGRESS/DONE)");
+        System.out.println(" [2] Filter by Divisi");
+        System.out.println(" [0] Batal");
+        System.out.println("------------------------------------------------------------");
+        System.out.print("Pilih > ");
+        String o = sc.nextLine().trim();
+
+        switch (o) {
+            case "1": filterByStatus(); break;
+            case "2": filterByDivisi(); break;
+            default: System.out.println(YELLOW + "Operasi dibatalkan / pilihan tidak valid." + RESET);
+        }
+    }
+
+    /**
+     * Filter tugas berdasarkan status.
+     *
+     * Menampilkan semua tugas yang statusnya sama dengan input.
+     */
+    private void filterByStatus() {
+        System.out.print("Masukkan status (TODO/IN_PROGRESS/DONE): ");
+        String s = sc.nextLine().trim().toUpperCase();
+        if (s.isEmpty()) { System.out.println(YELLOW + "Input kosong." + RESET); return; }
+
+        List<String> out = new ArrayList<>();
+        for (Divisi d : ds.getDivisiList()) {
+            for (Tugas t : d.getTugasList()) {
+                if (t.getStatus() != null && t.getStatus().name().equalsIgnoreCase(s)) {
+                    out.add(String.format("[%s] %s | %s | %s", d.getNama(), t.getId(), t.getJudul(), t.getStatus()));
+                }
+            }
+        }
+
+        System.out.println("\n==== HASIL FILTER STATUS: " + s + " ====");
+        if (out.isEmpty()) System.out.println("(Tidak ada tugas dengan status tersebut)");
+        else out.forEach(System.out::println);
+        System.out.println("========================================");
+    }
+
+    /**
+     * Filter tugas berdasarkan divisi (nama partial match OK).
+     */
+    private void filterByDivisi() {
+        System.out.print("Masukkan nama/keyword divisi: ");
+        String q = sc.nextLine().trim().toLowerCase();
+        if (q.isEmpty()) { System.out.println(YELLOW + "Input kosong." + RESET); return; }
+
+        List<String> out = new ArrayList<>();
+        for (Divisi d : ds.getDivisiList()) {
+            if (d.getNama() != null && d.getNama().toLowerCase().contains(q)) {
+                for (Tugas t : d.getTugasList()) {
+                    out.add(String.format("[%s] %s | %s | %s", d.getNama(), t.getId(), t.getJudul(), t.getStatus()));
+                }
+            }
+        }
+
+        System.out.println("\n==== HASIL FILTER DIVISI: " + q + " ====");
+        if (out.isEmpty()) System.out.println("(Tidak ada tugas pada divisi tersebut)");
+        else out.forEach(System.out::println);
+        System.out.println("========================================");
+    }
+
+    /**
+     * Sortir tugas di seluruh sistem (gabungan) berdasarkan kriteria yang dipilih.
+     *
+     * Kriteria default implementasi:
+     * - status (order: TODO -> IN_PROGRESS -> DONE)
+     * - nama tugas (A-Z)
+     * - divisi (A-Z)
+     */
+    private void sortTugas() {
+        System.out.println();
+        System.out.println("------------------------------------------------------------");
+        System.out.println(TITLE + "                        SORTIR TUGAS                       " + RESET);
+        System.out.println("------------------------------------------------------------");
+        System.out.println(" [1] Sort by Status (TODO -> IN_PROGRESS -> DONE)");
+        System.out.println(" [2] Sort by Judul (A-Z)");
+        System.out.println(" [3] Sort by Divisi (A-Z)");
+        System.out.println(" [0] Batal");
+        System.out.println("------------------------------------------------------------");
+        System.out.print("Pilih > ");
+        String o = sc.nextLine().trim();
+
+        // kumpulkan semua tugas bersama nama divisi
+        List<Map.Entry<Divisi, Tugas>> pool = new ArrayList<>();
+        for (Divisi d : ds.getDivisiList()) {
+            for (Tugas t : d.getTugasList()) pool.add(new AbstractMap.SimpleEntry<>(d, t));
+        }
+
+        switch (o) {
+            case "1":
+                pool.sort(Comparator.comparingInt(e -> statusOrder(e.getValue().getStatus())));
+                break;
+            case "2":
+                pool.sort(Comparator.comparing(e -> {
+                    String j = e.getValue().getJudul();
+                    return j == null ? "" : j.toLowerCase();
+                }));
+                break;
+            case "3":
+                pool.sort(Comparator.comparing(e -> {
+                    String dn = e.getKey().getNama();
+                    return dn == null ? "" : dn.toLowerCase();
+                }));
+                break;
+            default:
+                System.out.println(YELLOW + "Operasi dibatalkan / pilihan tidak valid." + RESET);
+                return;
+        }
+
+        System.out.println("\n==== HASIL SORTIR ====");
+        if (pool.isEmpty()) {
+            System.out.println("(Tidak ada tugas)");
+        } else {
+            for (Map.Entry<Divisi, Tugas> e : pool) {
+                Divisi d = e.getKey();
+                Tugas t = e.getValue();
+                System.out.printf("[%s] %s | %s | status=%s%n",
+                        d.getNama(), t.getId(), truncate(t.getJudul(), 40), t.getStatus());
+            }
+        }
+        System.out.println("========================================");
+    }
