@@ -16,3 +16,17 @@ Sistem Manajemen Kepanitiaan ini dibuat untuk membantu pengelolaan panitia acara
 Terdapat dua jenis pengguna, yaitu **Admin** dan **Member**, yang masing-masing memiliki peran dan akses berbeda.
 
 Sistem menyediakan **dua role utama**:
+### 👤 Admin
+- Login sebagai admin  
+- CRUD Divisi  
+- CRUD Tugas  
+- Melihat seluruh tugas & divisi  
+- Mengelola data anggota  
+- Melihat aktivitas member  
+
+### 👥 Member
+- Login sebagai member  
+- Melihat daftar divisi dan tugas  
+- Mengerjakan / update status tugas (Pending → Done)  
+- Melihat Riwayat Tugas yang sudah dikerjakan  
+- Melihat informasi divisi tempat ia tergabung  
