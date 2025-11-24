@@ -78,3 +78,89 @@ public class DataStorage {
         divisiList.add(d);
         saveAll();
     }
+// ---------------- ACCESSORS ----------------
+
+    /**
+     * Mengambil daftar seluruh akun.
+     *
+     * @return list akun
+     */
+    public List<Account> getAccounts() { return accounts; }
+
+    /**
+     * Mengambil daftar seluruh anggota.
+     *
+     * @return list anggota
+     */
+    public List<Anggota> getAnggotaList() { return anggotaList; }
+
+    /**
+     * Mengambil daftar seluruh divisi.
+     *
+     * @return list divisi
+     */
+    public List<Divisi> getDivisiList() { return divisiList; }
+
+    // ---------------- FINDERS & LOGIN ----------------
+
+    /**
+     * Mencari akun berdasarkan username (case-insensitive).
+     *
+     * @param username username yang dicari
+     * @return Account jika ditemukan, null jika tidak
+     */
+    public Account findAccountByUsername(String username) {
+        if (username==null) return null;
+        for (Account a : accounts) if (username.equalsIgnoreCase(a.getUsername())) return a;
+        return null;
+    }
+
+    /**
+     * Melakukan login untuk Admin.
+     *
+     * @param username username admin
+     * @param password password admin
+     * @return Admin jika cocok, null jika gagal
+     */
+    public Admin loginAdmin(String username, String password) {
+        Account a = findAccountByUsername(username);
+        if (a instanceof Admin && a.checkPassword(password)) return (Admin) a;
+        return null;
+    }
+
+    /**
+     * Melakukan login untuk Member.
+     *
+     * @param username username member
+     * @param password password member
+     * @return Member jika cocok, null jika gagal
+     */
+    public Member loginMember(String username, String password) {
+        Account a = findAccountByUsername(username);
+        if (a instanceof Member && a.checkPassword(password)) return (Member) a;
+        return null;
+    }
+
+    /**
+     * Mencari anggota berdasarkan ID.
+     *
+     * @param id ID anggota
+     * @return Anggota jika ditemukan, null jika tidak
+     */
+    public Anggota findAnggotaById(String id) {
+        if (id==null) return null;
+        for (Anggota a : anggotaList) if (id.equals(a.getId())) return a;
+        return null;
+    }
+
+    /**
+     * Mencari divisi berdasarkan nama (case-insensitive).
+     *
+     * @param name nama divisi
+     * @return Divisi jika ditemukan, null jika tidak
+     */
+    public Divisi findDivisiByName(String name) {
+        if (name==null) return null;
+        for (Divisi d : divisiList) if (name.equalsIgnoreCase(d.getNama())) return d;
+        return null;
+    }
