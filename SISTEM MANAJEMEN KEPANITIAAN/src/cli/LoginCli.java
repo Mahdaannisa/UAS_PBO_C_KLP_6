@@ -61,3 +61,47 @@ public class LoginCLI {
             }
         }
     }
+
+    /**
+     * Login akun admin.
+     * Jika berhasil, diarahkan ke menu AdminCLI.
+     */
+    private void adminLogin() {
+        System.out.print("Username: ");
+        String u = sc.nextLine().trim();
+
+        System.out.print("Password: ");
+        String p = sc.nextLine().trim();
+
+        Admin a = ds.loginAdmin(u, p);
+
+        if (a == null) {
+            System.out.println(YELLOW + "Login admin gagal." + RESET);
+            return;
+        }
+
+        new AdminCLI(a).start();
+        ds.loadAll(); // reload data setelah kembali
+    }
+
+    /**
+     * Login akun member.
+     * Jika berhasil, diarahkan ke menu MemberCLI.
+     */
+    private void memberLogin() {
+        System.out.print("Username: ");
+        String u = sc.nextLine().trim();
+
+        System.out.print("Password: ");
+        String p = sc.nextLine().trim();
+
+        Member m = ds.loginMember(u, p);
+
+        if (m == null) {
+            System.out.println(YELLOW + "Login member gagal." + RESET);
+            return;
+        }
+
+        new MemberCLI(m).start();
+        ds.loadAll();
+    }
