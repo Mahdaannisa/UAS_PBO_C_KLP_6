@@ -152,3 +152,303 @@ public class AdminCLI {
         // auto tampilkan tabel setelah menambah
         lihatAnggotaTerurut();
     }
+ /**
+     * Mengedit data anggota berdasarkan ID.
+     */
+    private void editAnggota() {
+        System.out.print("Masukkan ID anggota yang ingin diedit: ");
+        String id = sc.nextLine().trim();
+
+        Anggota a = ds.findAnggotaById(id);
+        if (a == null) {
+            System.out.println(YELLOW + "ID anggota tidak ditemukan." + RESET);
+            return;
+        }
+
+        System.out.print("Nama baru (" + a.getNama() + "): ");
+        String nama = sc.nextLine().trim();
+        System.out.print("Divisi baru (" + a.getDivisi() + "): ");
+        String div = sc.nextLine().trim();
+        System.out.print("No HP baru (" + a.getNoHp() + "): ");
+        String hp = sc.nextLine().trim();
+
+        if (!nama.isEmpty()) a.setNama(nama);
+        if (!div.isEmpty()) a.setDivisi(div);
+        if (!hp.isEmpty()) a.setNoHp(hp);
+
+        riwayAdmin.add(admin.getUsername(), "EDIT_ANGGOTA," + id);
+        ds.saveAll();
+
+        System.out.println(GREEN + "Data anggota berhasil diperbarui." + RESET);
+    }
+
+    /**
+     * Menghapus anggota berdasarkan ID.
+     */
+    private void hapusAnggota() {
+        System.out.print("Masukkan ID anggota yang ingin dihapus: ");
+        String id = sc.nextLine().trim();
+
+        Anggota a = ds.findAnggotaById(id);
+        if (a == null) {
+            System.out.println(YELLOW + "ID anggota tidak ditemukan." + RESET);
+            return;
+        }
+
+        ds.removeAnggotaById(id);
+        riwayAdmin.add(admin.getUsername(), "DELETE_ANGGOTA," + id);
+        ds.saveAll();
+
+        System.out.println(GREEN + "Anggota berhasil dihapus." + RESET);
+    }
+
+    /**
+     * Menampilkan semua anggota terurut berdasarkan divisi dalam bentuk tabel.
+     */
+    private void lihatAnggotaTerurut() {
+        List<Anggota> list = new ArrayList<>(ds.getAnggotaList());
+
+        if (list.isEmpty()) {
+            System.out.println("(Tidak ada anggota)");
+            return;
+        }
+
+        list.sort(Comparator.comparing(Anggota::getDivisi, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(Anggota::getNama, String.CASE_INSENSITIVE_ORDER));
+
+        String currentDiv = "";
+        int total = 0;
+
+        System.out.println("============================================================");
+        System.out.println("                DAFTAR ANGGOTA TERURUT DIVISI");
+        System.out.println("============================================================");
+
+        for (Anggota a : list) {
+            String div = a.getDivisi() == null ? "" : a.getDivisi();
+
+            if (!div.equalsIgnoreCase(currentDiv)) {
+                currentDiv = div;
+
+                // hitung anggota per divisi
+                int count = 0;
+                for (Anggota x : list)
+                    if ((x.getDivisi()==null?"":x.getDivisi()).equalsIgnoreCase(currentDiv)) count++;
+
+                System.out.println();
+                System.out.println("DIVISI : " + (currentDiv.isEmpty() ? "(tidak diisi)" : currentDiv) +
+                        " (" + count + " anggota)");
+                System.out.println("+------------+----------------------+--------------+");
+                System.out.println("| ID         | NAMA                 | NO HP        |");
+                System.out.println("+------------+----------------------+--------------+");
+            }
+
+            System.out.printf("| %-10s | %-20s | %-12s |%n",
+                    a.getId(), a.getNama(), a.getNoHp());
+            System.out.println("+------------+----------------------+--------------+");
+
+            total++;
+        }
+
+        System.out.println("\n------------------------------------------------------------");
+        System.out.println(GREEN + "Total anggota: " + total + RESET);
+    }
+
+    /**
+     * Fitur pencarian anggota menggunakan ID atau nama (partial search).
+     */
+    private void cariAnggota() {
+        System.out.print("Masukkan ID atau Nama (partial OK): ");
+        String q = sc.nextLine().trim().toLowerCase();
+
+        List<Anggota> found = new ArrayList<>();
+        for (Anggota a : ds.getAnggotaList()) {
+            if (a.getId().toLowerCase().contains(q)
+                    || a.getNama().toLowerCase().contains(q)) {
+
+                found.add(a);
+            }
+        }
+
+        if (found.isEmpty()) {
+            System.out.println(YELLOW + "Tidak ditemukan anggota dengan query: " + q + RESET);
+            return;
+        }
+
+        System.out.println("+------------+----------------------+--------------+");
+        System.out.println("| ID         | NAMA                 | NO HP        |");
+        System.out.println("+------------+----------------------+--------------+");
+
+        for (Anggota a : found) {
+            System.out.printf("| %-10s | %-20s | %-12s |%n",
+                    a.getId(), a.getNama(), a.getNoHp());
+            System.out.println("+------------+----------------------+--------------+");
+        }
+    }
+
+    // ============================================================
+    //                      DIVISI & TUGAS
+    // ============================================================
+
+    /**
+     * Menampilkan submenu pengelolaan divisi dan tugas.
+     */
+    private void kelolaDivisiTugas() {
+        while (true) {
+            try {
+                System.out.println();
+                System.out.println("------------------------------------------------------------");
+                System.out.println(TITLE + "                KELOLA DIVISI & TUGAS                      " + RESET);
+                System.out.println("------------------------------------------------------------");
+                System.out.println(" [1] Tambah Divisi");
+                System.out.println(" [2] Tambah Tugas ke Divisi");
+                System.out.println(" [3] Lihat Divisi & Tugas");
+                System.out.println(" [4] Hapus Tugas dari Divisi");
+                System.out.println(" [0] Kembali");
+                System.out.println("------------------------------------------------------------");
+                System.out.print("Pilih > ");
+
+                String o = sc.nextLine().trim();
+                switch (o) {
+                    case "1": tambahDivisi(); break;
+                    case "2": tambahTugas(); break;
+                    case "3": lihatDivisiTugas(); break;
+                    case "4": hapusTugas(); break;
+                    case "0": return;
+                    default: System.out.println(YELLOW + "Pilihan tidak valid." + RESET);
+                }
+
+                pauseForBack();
+            } catch (Exception ex) {
+                System.out.println(YELLOW + "Error: " + ex.getMessage() + RESET);
+            }
+        }
+    }
+
+    /**
+     * Menambah divisi baru.
+     */
+    private void tambahDivisi() {
+        System.out.print("Nama Divisi: ");
+        String dn = sc.nextLine().trim();
+
+        if (dn.isEmpty()) {
+            System.out.println(YELLOW + "Nama wajib." + RESET);
+            return;
+        }
+
+        if (ds.findDivisiByName(dn) != null) {
+            System.out.println(YELLOW + "Divisi sudah ada." + RESET);
+            return;
+        }
+
+        ds.addDivisi(new Divisi(dn));
+        riwayAdmin.add(admin.getUsername(), "ADD_DIVISI," + dn);
+        ds.saveAll();
+
+        System.out.println(GREEN + "Divisi ditambahkan." + RESET);
+    }
+
+    /**
+     * Menambahkan tugas ke dalam suatu divisi.
+     */
+    private void tambahTugas() {
+        System.out.print("Divisi tujuan: ");
+        String dn = sc.nextLine().trim();
+
+        Divisi d = ds.findDivisiByName(dn);
+        if (d == null) {
+            System.out.println(YELLOW + "Divisi tidak ditemukan." + RESET);
+            return;
+        }
+
+        System.out.print("ID Tugas: ");
+        String tid = sc.nextLine().trim();
+        System.out.print("Judul: ");
+        String judul = sc.nextLine().trim();
+        System.out.print("Deskripsi: ");
+        String desc = sc.nextLine().trim();
+
+        d.addTugas(new Tugas(tid, judul, desc));
+        riwayAdmin.add(admin.getUsername(), "ADD_TUGAS," + tid + "," + dn);
+        ds.saveAll();
+
+        System.out.println(GREEN + "Tugas ditambahkan ke divisi " + dn + RESET);
+    }
+
+    /**
+     * Menghapus tugas dari divisi berdasarkan ID tugas.
+     */
+    private void hapusTugas() {
+        System.out.print("Divisi: ");
+        String dn = sc.nextLine().trim();
+
+        Divisi d = ds.findDivisiByName(dn);
+        if (d == null) {
+            System.out.println(YELLOW + "Divisi tidak ditemukan." + RESET);
+            return;
+        }
+
+        System.out.print("ID tugas yang ingin dihapus: ");
+        String tid = sc.nextLine().trim();
+
+        boolean exists = false;
+        for (Tugas t : d.getTugasList()) {
+            if (t.getId().equals(tid)) { exists = true; break; }
+        }
+
+        if (!exists) {
+            System.out.println(YELLOW + "Tugas tidak ditemukan di divisi tersebut." + RESET);
+            return;
+        }
+
+        d.removeTugasById(tid);
+        riwayAdmin.add(admin.getUsername(), "DELETE_TUGAS," + tid + "," + dn);
+        ds.saveAll();
+
+        System.out.println(GREEN + "Tugas dihapus." + RESET);
+    }
+
+    /**
+     * Menampilkan seluruh divisi dan tugas dalam format tabel.
+     */
+    private void lihatDivisiTugas() {
+        List<Divisi> list = new ArrayList<>(ds.getDivisiList());
+        list.sort(Comparator.comparing(Divisi::getNama, String.CASE_INSENSITIVE_ORDER));
+
+        System.out.println("============================================================");
+        System.out.println("                    DAFTAR DIVISI & TUGAS");
+        System.out.println("============================================================");
+
+        if (list.isEmpty()) {
+            System.out.println("(Belum ada divisi)");
+            System.out.println("============================================================");
+            return;
+        }
+
+        for (Divisi d : list) {
+            System.out.printf("\nDIVISI: %s   (Total Tugas: %d)%n",
+                    d.getNama(), d.getTugasList().size());
+
+            System.out.println("+------------+------------------------------+------------+");
+            System.out.printf("| %-10s | %-28s | %-10s |%n",
+                    "ID Tugas", "Judul", "Status");
+            System.out.println("+------------+------------------------------+------------+");
+
+            if (d.getTugasList().isEmpty()) {
+                System.out.printf("| %-46s |%n", "(Tidak ada tugas)");
+                System.out.println("+------------+------------------------------+------------+");
+                continue;
+            }
+
+            List<Tugas> tugasList = new ArrayList<>(d.getTugasList());
+            tugasList.sort(Comparator.comparing(Tugas::getId));
+
+            for (Tugas t : tugasList) {
+                System.out.printf("| %-10s | %-28s | %-10s |%n",
+                        t.getId(), truncate(t.getJudul(), 28), t.getStatus());
+                System.out.println("+------------+------------------------------+------------+");
+            }
+        }
+
+        System.out.println("\n============================================================");
+    }
