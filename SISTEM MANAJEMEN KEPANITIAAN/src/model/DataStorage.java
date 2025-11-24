@@ -164,3 +164,80 @@ public class DataStorage {
         for (Divisi d : divisiList) if (name.equalsIgnoreCase(d.getNama())) return d;
         return null;
     }
+// ---------------- MUTATORS ----------------
+
+    /**
+     * Menambahkan akun baru ke penyimpanan.
+     *
+     * @param a akun yang ditambahkan
+     */
+    public void addAccount(Account a) { if (a!=null) accounts.add(a); }
+
+    /**
+     * Menambahkan anggota baru ke penyimpanan.
+     *
+     * @param a anggota yang ditambahkan
+     */
+    public void addAnggota(Anggota a) { if (a!=null) { anggotaList.add(a); } }
+
+    /**
+     * Menghapus anggota berdasarkan ID.
+     *
+     * @param id ID anggota yang akan dihapus
+     */
+    public void removeAnggotaById(String id) { if (id==null) return; anggotaList.removeIf(x->id.equals(x.getId())); }
+
+    /**
+     * Menambahkan divisi baru.
+     *
+     * @param d divisi yang ditambahkan
+     */
+    public void addDivisi(Divisi d) { if (d!=null) divisiList.add(d); }
+
+    // ---------------- LOAD/SAVE ----------------
+
+    /**
+     * Memuat seluruh data dari semua file penyimpanan.
+     */
+    public void loadAll() { loadAccounts(); loadAnggota(); loadDivisiAndTugas(); }
+
+    /**
+     * Menyimpan seluruh data ke file.
+     */
+    public void saveAll() { saveAccounts(); saveAnggota(); saveDivisiAndTugas(); }
+
+    /**
+     * Memuat data akun dari <code>accounts.txt</code>.
+     */
+    private void loadAccounts() {
+        accounts.clear();
+        if (!Files.exists(accountsFile)) return;
+        try (BufferedReader br = Files.newBufferedReader(accountsFile)) {
+            String line;
+            while ((line=br.readLine())!=null) {
+                String[] p = line.split(",", -1);
+                if (p.length>=4) {
+                    if ("ADMIN".equalsIgnoreCase(p[0])) accounts.add(new Admin(p[1], p[2], p[3]));
+                    else accounts.add(new Member(p[1], p[2], p[3], p.length>=5?p[4]:""));
+                }
+            }
+        } catch (IOException e) { System.err.println("load accounts: " + e.getMessage()); }
+    }
+
+    /**
+     * Menyimpan data akun ke <code>accounts.txt</code>.
+     */
+    private void saveAccounts() {
+        try (BufferedWriter bw = Files.newBufferedWriter(accountsFile)) {
+            for (Account a : accounts) {
+                if (a instanceof Admin) 
+                    bw.write("ADMIN," + a.getUsername() + "," + a.getPassword() + "," + a.getName());
+                else if (a instanceof Member) {
+                    Member m = (Member)a;
+                    bw.write("MEMBER," + m.getUsername() + "," + m.getPassword() + "," + m.getName() + "," + (m.getIdAnggota()==null?"":m.getIdAnggota()));
+                } else 
+                    bw.write("UNKNOWN," + a.getUsername() + "," + a.getPassword() + "," + a.getName());
+                bw.newLine();
+            }
+        } catch (IOException e) { System.err.println("save accounts: " + e.getMessage()); }
+    }
