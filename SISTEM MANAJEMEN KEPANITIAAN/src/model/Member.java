@@ -8,3 +8,7 @@ public class Member extends Account {
     public Member(String username, String password, String name, String idAnggota) {
         super(username,password,name); this.idAnggota = idAnggota;
     }
+    public String getIdAnggota() { return idAnggota; }
+    public void setIdAnggota(String id) { this.idAnggota = id; }
+    @Override public String getRole() { return "MEMBER"; }
+}
