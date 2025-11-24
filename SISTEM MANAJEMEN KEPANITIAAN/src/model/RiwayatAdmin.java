@@ -65,3 +65,17 @@ public class RiwayatAdmin {
             return Collections.emptyList(); 
         }
     }
+
+/**
+     * Mencetak seluruh riwayat admin dalam format tabel ke console.
+     * Tabel menggunakan border sederhana dan akan menyesuaikan lebar kolom
+     * berdasarkan panjang data riil.
+     *
+     * <p>Jika tidak ada riwayat, maka akan mencetak pesan penanda kosong.</p>
+     */
+    public void printTable() {
+        List<String> lines = getAll();
+        if (lines.isEmpty()) { 
+            System.out.println("(tidak ada riwayat admin)"); 
+            return; 
+        }
