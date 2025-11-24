@@ -425,3 +425,40 @@ public class MemberCLI {
         }
         System.out.println("========================================");
     }
+
+    /**
+     * Helper: konversi status ke urutan integer untuk sorting.
+     *
+     * @param s status tugas
+     * @return urutan (lebih kecil = diprioritaskan di depan)
+     */
+    private int statusOrder(Tugas.Status s) {
+        if (s == null) return 99;
+        switch (s) {
+            case TODO: return 0;
+            case IN_PROGRESS: return 1;
+            case DONE: return 2;
+            default: return 99;
+        }
+    }
+
+    /**
+     * Pause sebelum kembali ke menu.
+     */
+    private void pauseForBack() {
+        System.out.println(YELLOW + "\nTekan ENTER untuk kembali..." + RESET);
+        sc.nextLine();
+    }
+
+    /**
+     * Memotong string jika lebih panjang dari batas tabel.
+     *
+     * @param s   string asli
+     * @param len batas panjang
+     * @return string yang sudah dipotong dengan "..." bila perlu
+     */
+    private String truncate(String s, int len) {
+        if (s == null) return "";
+        return s.length() <= len ? s : s.substring(0, len - 3) + "...";
+    }
+}
