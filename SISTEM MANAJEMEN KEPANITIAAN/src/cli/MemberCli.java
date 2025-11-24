@@ -197,3 +197,97 @@ public class MemberCLI {
 
         System.out.println(YELLOW + "Tugas tidak ditemukan." + RESET);
     }
+
+    /**
+     * Menampilkan riwayat aktivitas milik member.
+     */
+    private void lihatRiwayat() {
+        System.out.println("------------------------------------------------------------");
+        System.out.println("Riwayat pribadi:");
+        System.out.println("------------------------------------------------------------");
+        riway.print(member.getIdAnggota());
+    }
+
+    // ===========================
+    // MENU PENCARIAN & FILTER
+    // ===========================
+
+    /**
+     * Submenu yang menggabungkan pencarian, filter, dan sortir tugas.
+     *
+     * Submenu:
+     * [1] Cari Divisi & Tugas
+     * [2] Filter Tugas
+     * [3] Sortir Tugas
+     * [0] Kembali
+     */
+    private void menuPencarianFilter() {
+        while (true) {
+            System.out.println();
+            System.out.println("------------------------------------------------------------");
+            System.out.println(TITLE + "               PENCARIAN & FILTER TUGAS                    " + RESET);
+            System.out.println("------------------------------------------------------------");
+            System.out.println(" [1] Cari Divisi & Tugas");
+            System.out.println(" [2] Filter Tugas (status / divisi)");
+            System.out.println(" [3] Sortir Tugas (status / nama / divisi)");
+            System.out.println(" [0] Kembali");
+            System.out.println("------------------------------------------------------------");
+            System.out.print("Pilih > ");
+            String o = sc.nextLine().trim();
+
+            switch (o) {
+                case "1": searchDivisiTugasMember(); pauseForBack(); break;
+                case "2": filterTugas(); pauseForBack(); break;
+                case "3": sortTugas(); pauseForBack(); break;
+                case "0": return;
+                default: System.out.println(YELLOW + "Pilihan tidak valid." + RESET);
+            }
+        }
+    }
+
+    /**
+     * Pencarian gabungan divisi & tugas untuk Member (hanya menampilkan hasil).
+     *
+     * <p>Keyword dicari di:
+     * - nama divisi
+     * - id tugas
+     * - judul tugas
+     * - deskripsi tugas
+     *
+     * Hasil tugas menampilkan divisi asal tugas.
+     */
+    private void searchDivisiTugasMember() {
+        System.out.print("Masukkan keyword pencarian (divisi/tugas): ");
+        String q = sc.nextLine().trim().toLowerCase();
+        if (q.isEmpty()) {
+            System.out.println(YELLOW + "Keyword kosong." + RESET);
+            return;
+        }
+
+        List<Divisi> divMatches = new ArrayList<>();
+        List<String> tugasMatches = new ArrayList<>();
+
+        for (Divisi d : ds.getDivisiList()) {
+            if (d.getNama() != null && d.getNama().toLowerCase().contains(q)) {
+                divMatches.add(d);
+            }
+            for (Tugas t : d.getTugasList()) {
+                if ((t.getId()!=null && t.getId().toLowerCase().contains(q)) ||
+                        (t.getJudul()!=null && t.getJudul().toLowerCase().contains(q)) ||
+                        (t.getDeskripsi()!=null && t.getDeskripsi().toLowerCase().contains(q))) {
+
+                    tugasMatches.add(String.format("[%s] %s | %s", d.getNama(), t.getId(), t.getJudul()));
+                }
+            }
+        }
+
+        System.out.println("\n================== HASIL PENCARIAN ==================");
+        System.out.println("\nDIVISI:");
+        if (divMatches.isEmpty()) System.out.println("(tidak ada divisi yang cocok)");
+        else for (Divisi d : divMatches) System.out.println("- " + d.getNama());
+
+        System.out.println("\nTUGAS:");
+        if (tugasMatches.isEmpty()) System.out.println("(tidak ada tugas yang cocok)");
+        else tugasMatches.forEach(s -> System.out.println("- " + s));
+        System.out.println("=====================================================");
+    }
