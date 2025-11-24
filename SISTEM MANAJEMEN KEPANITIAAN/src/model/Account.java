@@ -72,7 +72,7 @@ public abstract class Account {
      * Mengembalikan peran (role) dari akun.
      * Metode ini harus diimplementasikan oleh kelas turunan.
      *
-     * @return peran akunn
+     * @return peran akun
      */
     public abstract String getRole();
 }
