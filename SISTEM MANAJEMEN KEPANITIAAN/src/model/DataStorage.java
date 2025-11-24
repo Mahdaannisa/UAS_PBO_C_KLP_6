@@ -30,7 +30,7 @@ public class DataStorage {
     private final List<Account> accounts = new ArrayList<>();
     private final List<Anggota> anggotaList = new ArrayList<>();
     private final List<Divisi> divisiList = new ArrayList<>();
-
+    
     /**
      * Konstruktor privat (Singleton).  
      * Membuat folder <code>data/</code> jika belum ada, mengisi data default bila kosong,
