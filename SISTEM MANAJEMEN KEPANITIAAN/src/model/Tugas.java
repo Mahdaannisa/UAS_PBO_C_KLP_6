@@ -32,3 +32,19 @@ public class Tugas {
     public Tugas(String id, String judul, String deskripsi) {
         this.id = id; this.judul = judul; this.deskripsi = deskripsi; this.status = Status.TODO;
     }
+
+/** @return ID tugas. */
+    public String getId() { return id; }
+
+    /** @return Judul tugas. */
+    public String getJudul() { return judul; }
+
+    /** @return Deskripsi tugas. */
+    public String getDeskripsi() { return deskripsi; }
+
+    /** @return Deadline tugas, atau null jika belum ditentukan. */
+    public LocalDate getDeadline() { return deadline; }
+
+    /** @return Status pengerjaan tugas. */
+    public Status getStatus() { return status; }
+    
