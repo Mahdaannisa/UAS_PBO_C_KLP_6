@@ -452,3 +452,38 @@ public class AdminCLI {
 
         System.out.println("\n============================================================");
     }
+
+    /**
+     * Memotong string agar tidak melebihi panjang tertentu.
+     *
+     * @param s   string asli
+     * @param len maks panjang
+     * @return string terpotong atau asli
+     */
+    private String truncate(String s, int len) {
+        if (s == null) return "";
+        return s.length() <= len ? s : s.substring(0, len-3) + "...";
+    }
+
+    /**
+     * Menampilkan tabel riwayat aktivitas admin.
+     */
+    private void viewRiwayatAdmin() {
+        System.out.println();
+        System.out.println("------------------------------------------------------------");
+        System.out.println(TITLE + "                    RIWAYAT ADMIN                         " + RESET);
+        System.out.println("------------------------------------------------------------");
+
+        riwayAdmin.printTable();
+
+        pauseForBack();
+    }
+
+    /**
+     * Pause CLI sampai user menekan ENTER.
+     */
+    private void pauseForBack() {
+        System.out.println(YELLOW + "\nTekan ENTER untuk kembali..." + RESET);
+        sc.nextLine();
+    }
+}
