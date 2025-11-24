@@ -49,3 +49,21 @@ public class Divisi {
      * @param id ID tugas yang akan dihapus
      */
     public void removeTugasById(String id) { tugasList.removeIf(t->t.getId().equals(id)); }
+
+    /**
+     * Mengembalikan representasi string dari divisi, yaitu nama divisi.
+     *
+     * @return nama divisi
+     */
+    @Override public String toString() { return nama; }
+
+    /**
+     * Membuat objek Divisi dari representasi string.
+     * Biasanya digunakan saat proses load dari file.
+     *
+     * @param s nama divisi dalam bentuk string
+     * @return objek Divisi baru dengan nama tersebut
+     */
+    public static Divisi fromString(String s) { return new Divisi(s); }
+}
+
