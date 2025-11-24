@@ -35,7 +35,7 @@ public class Anggota {
 
     /** @return Nomor HP anggota */
     public String getNoHp() { return noHp; }
-
+    
     /**
      * Mengubah nama anggota.
      * @param nama Nama baru
