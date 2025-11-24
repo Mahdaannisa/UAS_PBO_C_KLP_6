@@ -11,3 +11,8 @@ ANGGOTA KELOMPOK 6:
 6. MIRDHA AULIA ZAHRA (2408107010115)
 
 # SISTEM MANAJEMEN KEPANITIAAN
+## 1️⃣ Deskripsi Sistem
+Sistem Manajemen Kepanitiaan ini dibuat untuk membantu pengelolaan panitia acara menggunakan konsep **Pemrograman Berorientasi Objek (PBO)** dengan antarmuka **CLI (Command Line Interface)**. Sistem Manajemen Kepanitiaan ini yang digunakan untuk mengelola divisi, tugas, anggota, serta aktivitas dalam kepanitiaan.  
+Terdapat dua jenis pengguna, yaitu **Admin** dan **Member**, yang masing-masing memiliki peran dan akses berbeda.
+
+Sistem menyediakan **dua role utama**:
