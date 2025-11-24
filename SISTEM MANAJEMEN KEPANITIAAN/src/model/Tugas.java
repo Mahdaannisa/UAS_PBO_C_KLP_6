@@ -61,3 +61,15 @@ public class Tugas {
      * @param s Status baru.
      */
     public void setStatus(Status s) { this.status = s; }
+
+    /**
+     * Menghasilkan representasi string dari tugas,
+     * digunakan untuk penyimpanan ke berkas dengan format:
+     * id|judul|deskripsi|deadline|status
+     *
+     * @return Representasi string tugas.
+     */
+    @Override
+    public String toString() {
+        return id + "|" + judul + "|" + (deskripsi==null?"":deskripsi) + "|" + (deadline==null?"":deadline.toString()) + "|" + status.name();
+    }
