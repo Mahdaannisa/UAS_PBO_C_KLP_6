@@ -61,3 +61,22 @@ javac App.java
 #### ✔ D. Jalankan program
 java App
 
+### 2)GitHub 
+
+### ✔ A. Clone repository
+https://github.com/Mahdaannisa/UAS_PBO_C_KLP_6.git
+
+### ✔ B. Masuk ke folder project
+cd UAS_PBO_C_KLP_6/src
+
+### ✔ C. Compile program
+javac App.java
+
+### ✔ C. Jalankan program
+java App
+
+---
+
+## 3️⃣ Pembagian Tugas Kelompok 6
+
+
