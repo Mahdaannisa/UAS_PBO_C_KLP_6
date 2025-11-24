@@ -81,3 +81,74 @@ public class AdminCLI {
             }
         }
     }
+
+    // ============================================================
+    //                      KELOLA ANGGOTA
+    // ============================================================
+
+    /**
+     * Menampilkan submenu kelola anggota.
+     * <p>Mengatur fitur tambah, edit, hapus, dan lihat anggota.</p>
+     */
+    private void kelolaAnggota() {
+        while (true) {
+            try {
+                System.out.println();
+                System.out.println("------------------------------------------------------------");
+                System.out.println(TITLE + "                   KELOLA ANGGOTA                          " + RESET);
+                System.out.println("------------------------------------------------------------");
+                System.out.println(" [1] Tambah Anggota");
+                System.out.println(" [2] Edit Anggota");
+                System.out.println(" [3] Hapus Anggota");
+                System.out.println(" [4] Lihat Semua Anggota (Terurut per divisi)");
+                System.out.println(" [0] Kembali");
+                System.out.println("------------------------------------------------------------");
+                System.out.print("Pilih > ");
+
+                String o = sc.nextLine().trim();
+                switch (o) {
+                    case "1": tambahAnggota(); break;
+                    case "2": editAnggota(); break;
+                    case "3": hapusAnggota(); break;
+                    case "4": lihatAnggotaTerurut(); break;
+                    case "0": return;
+                    default: System.out.println(YELLOW + "Pilihan tidak valid." + RESET);
+                }
+
+                pauseForBack();
+            } catch (Exception ex) {
+                System.out.println(YELLOW + "Error: " + ex.getMessage() + RESET);
+            }
+        }
+    }
+
+    /**
+     * Menambahkan anggota baru ke sistem.
+     * <p>ID wajib unik dan nama tidak boleh kosong.</p>
+     */
+    private void tambahAnggota() {
+        System.out.print("ID        : "); String id = sc.nextLine().trim();
+        System.out.print("Nama      : "); String nama = sc.nextLine().trim();
+        System.out.print("Divisi    : "); String div = sc.nextLine().trim();
+        System.out.print("No HP     : "); String hp = sc.nextLine().trim();
+
+        if (id.isEmpty() || nama.isEmpty()) {
+            System.out.println(YELLOW + "ID & Nama wajib." + RESET);
+            return;
+        }
+        if (ds.findAnggotaById(id) != null) {
+            System.out.println(YELLOW + "ID sudah ada." + RESET);
+            return;
+        }
+
+        Anggota a = new Anggota(id, nama, div, hp);
+        ds.addAnggota(a);
+
+        riwayAdmin.add(admin.getUsername(), "ADD_ANGGOTA," + id + "," + nama);
+        ds.saveAll();
+
+        System.out.println(GREEN + "Anggota berhasil ditambahkan." + RESET);
+
+        // auto tampilkan tabel setelah menambah
+        lihatAnggotaTerurut();
+    }
