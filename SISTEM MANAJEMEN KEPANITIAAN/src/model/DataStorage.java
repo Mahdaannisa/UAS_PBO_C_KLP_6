@@ -241,3 +241,61 @@ public class DataStorage {
             }
         } catch (IOException e) { System.err.println("save accounts: " + e.getMessage()); }
     }
+/**
+     * Memuat data anggota dari <code>anggota.txt</code>.
+     */
+    private void loadAnggota() {
+        anggotaList.clear();
+        if (!Files.exists(anggotaFile)) return;
+        try (BufferedReader br = Files.newBufferedReader(anggotaFile)) {
+            String line;
+            while ((line=br.readLine())!=null) {
+                Anggota a = Anggota.fromString(line);
+                if (a!=null) anggotaList.add(a);
+            }
+        } catch (IOException e) { System.err.println("load anggota: " + e.getMessage()); }
+    }
+
+    /**
+     * Menyimpan data anggota ke <code>anggota.txt</code>.
+     */
+    private void saveAnggota() {
+        try (BufferedWriter bw = Files.newBufferedWriter(anggotaFile)) {
+            for (Anggota a : anggotaList) bw.write(a.toString() + System.lineSeparator());
+        } catch (IOException e) { System.err.println("save anggota: " + e.getMessage()); }
+    }
+
+    /**
+     * Memuat data divisi dan tugas dari <code>divisi.txt</code>.
+     */
+    private void loadDivisiAndTugas() {
+        divisiList.clear();
+        if (!Files.exists(divisiFile)) return;
+        try (BufferedReader br = Files.newBufferedReader(divisiFile)) {
+            String line; Divisi current = null;
+            while ((line=br.readLine())!=null) {
+                if (line.startsWith("DIV|")) { 
+                    current = new Divisi(line.substring(4)); 
+                    divisiList.add(current); 
+                }
+                else if (line.startsWith("TASK|") && current!=null) {
+                    Tugas t = Tugas.fromString(line.substring(5));
+                    if (t!=null) current.addTugas(t);
+                }
+            }
+        } catch (IOException e) { System.err.println("load divisi: " + e.getMessage()); }
+    }
+
+    /**
+     * Menyimpan data divisi dan tugas ke <code>divisi.txt</code>.
+     */
+    private void saveDivisiAndTugas() {
+        try (BufferedWriter bw = Files.newBufferedWriter(divisiFile)) {
+            for (Divisi d : divisiList) {
+                bw.write("DIV|" + d.getNama() + System.lineSeparator());
+                for (Tugas t : d.getTugasList()) 
+                    bw.write("TASK|" + t.toString() + System.lineSeparator());
+            }
+        } catch (IOException e) { System.err.println("save divisi: " + e.getMessage()); }
+    }
+}
