@@ -73,3 +73,23 @@ public class Tugas {
     public String toString() {
         return id + "|" + judul + "|" + (deskripsi==null?"":deskripsi) + "|" + (deadline==null?"":deadline.toString()) + "|" + status.name();
     }
+
+    /**
+     * Membuat objek tugas dari string hasil penyimpanan.
+     * String harus memiliki format:
+     * id|judul|deskripsi|deadline|status
+     *
+     * @param s String sumber.
+     * @return Objek Tugas, atau null jika format tidak valid.
+     */
+    public static Tugas fromString(String s) {
+        String[] p = s.split("\\|", -1);
+        if (p.length < 5) return null;
+        Tugas t = new Tugas(p[0], p[1], p[2]);
+        if (!p[3].isEmpty()) {
+            try { t.setDeadline(LocalDate.parse(p[3])); } catch (Exception ignored) {}
+        }
+        try { t.setStatus(Status.valueOf(p[4])); } catch (Exception ex) { t.setStatus(Status.TODO); }
+        return t;
+    }
+}
