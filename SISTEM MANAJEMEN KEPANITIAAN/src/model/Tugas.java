@@ -32,4 +32,3 @@ public class Tugas {
     public Tugas(String id, String judul, String deskripsi) {
         this.id = id; this.judul = judul; this.deskripsi = deskripsi; this.status = Status.TODO;
     }
-}
