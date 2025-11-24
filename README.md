@@ -44,3 +44,20 @@ Sistem juga sudah menerapkan:
 
 ---
 
+## 2️⃣ Cara Menjalankan Program 
+
+### 1) Visual Studio Code
+
+#### ✔ A. Buka folder project  
+Pastikan berada di folder utama project hasil extract ZIP.
+
+#### ✔ B. Masuk ke folder `src`
+Program utama berada di file **App.java**.
+cd src
+
+#### ✔ C. Compile program
+javac App.java
+
+#### ✔ D. Jalankan program
+java App
+
